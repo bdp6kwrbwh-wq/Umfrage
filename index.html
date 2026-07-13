@@ -1,0 +1,37 @@
+# Umfrage
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sicherheitsprüfung...</title>
+    <script>
+        // HIER DIE IP-ADRESSE DES KASERNEN-WLANS EINTRAGEN
+        const erlaubteIP = "172.16.16.76"; 
+        
+        // HIER DEN LINK ZU IHRER GOOGLE / MICROSOFT UMFRAGE EINTRAGEN
+        const umfrageLink = "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAN__hCx6qdUOUtDS1NGTzZQOTMwS1ZYNFFCRkJRR0lXNC4u";
+
+        async function pruefeNetzwerk() {
+            try {
+                // Holt die IP-Adresse des Soldaten im Hintergrund
+                let response = await fetch('https://ipify.org');
+                let data = await response.json();
+                
+                if (data.ip === erlaubteIP) {
+                    // IP stimmt -> Leite sofort weiter zur Umfrage
+                    window.location.href = umfrageLink;
+                } else {
+                    // IP falsch -> Zeige Fehlermeldung und blockiere den Zugriff
+                    document.body.innerHTML = "<div style='font-family:Arial; text-align:center; margin-top:100px;'><h2>Zugriff verweigert.</h2><p>Diese Umfrage darf ausschliesslich im Dienst-WLAN ausgefüllt werden.</p></div>";
+                }
+            } catch (error) {
+                document.body.innerHTML = "<div style='font-family:Arial; text-align:center; margin-top:100px;'><h2>Netzwerkfehler.</h2><p>Bitte überprüfen Sie Ihre Verbindung.</p></div>";
+            }
+        }
+        window.onload = pruefeNetzwerk;
+    </script>
+</head>
+<body style="font-family:Arial; text-align:center; margin-top:100px;">
+    <p>Bitte warten, Netzwerkverbindung wird überprüft...</p>
+</body>
+</html>
